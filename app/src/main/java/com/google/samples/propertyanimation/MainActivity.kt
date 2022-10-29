@@ -83,20 +83,8 @@ class MainActivity : AppCompatActivity() {
         // Defines the duration, 300 milliseconds is default
         animator.duration = 1000
 
-        // Event based actions
-        animator.addListener(object : AnimatorListenerAdapter() {
-
-            // State: Start
-            override fun onAnimationStart(animation: Animator) {
-                rotateButton.isEnabled = false
-            }
-
-            // State: End
-            override fun onAnimationEnd(animation: Animator) {
-                rotateButton.isEnabled = true
-            }
-
-        })
+        // Disable the Button while the animation is being completed
+        animator.disableViewDuringAnimation(rotateButton)
 
         // Initialize the animation
         animator.start()
@@ -105,9 +93,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun translater() {
 
+        // Moves 200px in the X direction, from the "current" position
         val animator = ObjectAnimator.ofFloat(star, View.TRANSLATION_X, 200f)
+
+        // It controls how many times it repeats after the first run
         animator.repeatCount = 1
+
+        // .RESTART - Same Direction (for animating from the original start value to the original end value)
+        // .REVERSE - Towards Opposite Direction (for reversing the direction every time it repeats)
         animator.repeatMode = ObjectAnimator.REVERSE
+
+        // Disable the Button while the animation is being completed
+        animator.disableViewDuringAnimation(translateButton)
+
+        // Initialize the animation
         animator.start()
 
     }
@@ -122,6 +121,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun shower() {
+    }
+
+    /**
+     * disableViewDuringAnimation()
+     */
+    private fun ObjectAnimator.disableViewDuringAnimation(view: View) {
+        // Event based actions
+        addListener(object : AnimatorListenerAdapter() {
+
+            // State: Start
+            override fun onAnimationStart(animation: Animator) {
+                view.isEnabled = false
+            }
+
+            // State: End
+            override fun onAnimationEnd(animation: Animator) {
+                view.isEnabled = true
+            }
+
+        })
     }
 
 }
