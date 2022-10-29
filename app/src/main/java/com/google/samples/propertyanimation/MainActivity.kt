@@ -114,10 +114,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun scaler() {
 
+        // Scale Ratio: 4x in x,y directions
         val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 4f)
         val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 4f)
 
-        // Moves 200px in the X direction, from the "current" position
+        // Scales the Object, from the "current" position
         val animator = ObjectAnimator.ofPropertyValuesHolder(star, scaleX, scaleY)
 
         // It controls how many times it repeats after the first run
@@ -136,6 +137,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fader() {
+
+        // Fully Transparent/Alpha value = 0f
+        val animator = ObjectAnimator.ofFloat(star, View.ALPHA, 0f)
+
+        // It controls how many times it repeats after the first run
+        animator.repeatCount = 1
+
+        // .RESTART - Same Direction (for animating from the original start value to the original end value)
+        // .REVERSE - Towards Opposite Direction (for reversing the direction every time it repeats)
+        animator.repeatMode = ObjectAnimator.REVERSE
+
+        // Disable the Button while the animation is being completed
+        animator.disableViewDuringAnimation(fadeButton)
+
+        // Initialize the animation
+        animator.start()
+
     }
 
     private fun colorizer() {
