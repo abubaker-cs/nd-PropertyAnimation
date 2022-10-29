@@ -20,6 +20,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -157,6 +158,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun colorizer() {
+
+        // ofArgs() for Color Values
+        /**
+         *  When you do this, the system searches for setters and getters with that exact spelling
+         *  using reflection. It caches references to those methods and calls them during the animation,
+         *  instead of calling the ofInt() set/get functions.
+         */
+        var animator = ObjectAnimator.ofArgb(
+            star.parent,
+            "backgroundColor", Color.BLACK, Color.RED
+        )
+
+        // Duration: 5 milliseconds
+        animator.duration = 500
+
+        // It controls how many times it repeats after the first run
+        animator.repeatCount = 1
+
+        // .RESTART - Same Direction (for animating from the original start value to the original end value)
+        // .REVERSE - Towards Opposite Direction (for reversing the direction every time it repeats)
+        animator.repeatMode = ObjectAnimator.REVERSE
+
+        // Disable the Button while the animation is being completed
+        animator.disableViewDuringAnimation(colorizeButton)
+
+        // Initialize the animation
+        animator.start()
+
     }
 
     private fun shower() {
