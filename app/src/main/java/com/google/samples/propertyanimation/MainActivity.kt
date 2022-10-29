@@ -19,6 +19,7 @@ package com.google.samples.propertyanimation
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -112,6 +113,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scaler() {
+
+        val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 4f)
+        val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 4f)
+
+        // Moves 200px in the X direction, from the "current" position
+        val animator = ObjectAnimator.ofPropertyValuesHolder(star, scaleX, scaleY)
+
+        // It controls how many times it repeats after the first run
+        animator.repeatCount = 1
+
+        // .RESTART - Same Direction (for animating from the original start value to the original end value)
+        // .REVERSE - Towards Opposite Direction (for reversing the direction every time it repeats)
+        animator.repeatMode = ObjectAnimator.REVERSE
+
+        // Disable the Button while the animation is being completed
+        animator.disableViewDuringAnimation(scaleButton)
+
+        // Initialize the animation
+        animator.start()
+
     }
 
     private fun fader() {
