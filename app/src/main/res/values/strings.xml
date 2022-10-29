@@ -21,4 +21,6 @@
     <string name="scale">Scale</string>
     <string name="fade">Fade</string>
     <string name="shower">Shower</string>
+    <string name="star_icon">Star icon</string>
+    <string name="background_color_desc">Background Color</string>
 </resources>

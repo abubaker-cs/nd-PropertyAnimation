@@ -16,7 +16,11 @@
 
 package com.google.samples.propertyanimation
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -70,9 +74,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun rotater() {
+
+        // It will rotate the targeted object "star" from -360 to 0
+        // Note since 0deg is default value, that's why we want it to be the same once the animation
+        // will be completed, that's why we are starting from -360 instead of 360deg
+        val animator = ObjectAnimator.ofFloat(star, View.ROTATION, -360f, 0f)
+
+        // Defines the duration, 300 milliseconds is default
+        animator.duration = 1000
+
+        // Event based actions
+        animator.addListener(object : AnimatorListenerAdapter() {
+
+            // State: Start
+            override fun onAnimationStart(animation: Animator) {
+                rotateButton.isEnabled = false
+            }
+
+            // State: End
+            override fun onAnimationEnd(animation: Animator) {
+                rotateButton.isEnabled = true
+            }
+
+        })
+
+        // Initialize the animation
+        animator.start()
+
     }
 
     private fun translater() {
+
+        val animator = ObjectAnimator.ofFloat(star, View.TRANSLATION_X, 200f)
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+        animator.start()
+
     }
 
     private fun scaler() {
