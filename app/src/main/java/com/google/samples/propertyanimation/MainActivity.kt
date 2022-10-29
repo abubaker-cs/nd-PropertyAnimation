@@ -16,16 +16,19 @@
 
 package com.google.samples.propertyanimation
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
+import android.animation.*
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 
 
 class MainActivity : AppCompatActivity() {
@@ -157,6 +160,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("ObjectAnimatorBinding")
     private fun colorizer() {
 
         // ofArgs() for Color Values
@@ -189,6 +193,91 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun shower() {
+
+        /**
+         * 01 These variables will hold the state, which we will need later
+         */
+        val container = star.parent as ViewGroup
+        val containerW = container.width
+        val containerH = container.height
+        var starW: Float = star.width.toFloat()
+        var starH: Float = star.height.toFloat()
+
+        /**
+         * 02 Create a new star
+         */
+        // Purpose of this View is to hold the star graphic
+        // Because the star is a VectorDrawable asset, use an AppCompatImageView, which has the ability to host that kind of resource.
+        val newStar = AppCompatImageView(this)
+        newStar.setImageResource(R.drawable.ic_star)
+        newStar.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+        container.addView(newStar)
+
+        /**
+         * 03 Assign random size to the star
+         */
+        newStar.scaleX = Math.random().toFloat() * 1.5f + .1f
+        newStar.scaleY = newStar.scaleX
+
+        // New Scale Factor: Width, Height
+        starW *= newStar.scaleX
+        starH *= newStar.scaleY
+
+        /**
+         * 04 Random Position of the newly generated star
+         */
+        newStar.translationX = Math.random().toFloat() * containerW - starW / 2
+
+        /**
+         * 05 Falling Animation
+         */
+
+        val mover = ObjectAnimator.ofFloat(
+            newStar, View.TRANSLATION_Y,
+            -starH, containerH + starH
+        )
+        mover.interpolator = AccelerateInterpolator(1f)
+
+
+        /**
+         * 06 Rotating Animation: 360 * 3 = 1080 (up to: 3x rotation)
+         */
+        val rotator = ObjectAnimator.ofFloat(
+            newStar, View.ROTATION,
+            (Math.random() * 1080).toFloat()
+        )
+        rotator.interpolator = LinearInterpolator()
+
+        /**
+         * 07 Running Animation in parallel with AnimatorSet
+         */
+        val set = AnimatorSet()
+        set.playTogether(mover, rotator)
+        set.duration = (Math.random() * 1500 + 500).toLong()
+
+        /**
+         * 08
+         */
+        set.addListener(object : AnimatorListenerAdapter() {
+
+            // Take action in the end
+            override fun onAnimationEnd(animation: Animator) {
+
+                // Remove the completed animation from the container
+                container.removeView(newStar)
+
+            }
+
+        })
+
+        /**
+         * 09
+         */
+        set.start()
+
     }
 
     /**
